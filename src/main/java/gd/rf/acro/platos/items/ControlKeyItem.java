@@ -2,36 +2,36 @@ package gd.rf.acro.platos.items;
 
 import gd.rf.acro.platos.PlatosTransporters;
 import gd.rf.acro.platos.entity.BlockShipEntity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class ControlKeyItem extends Item {
-    public ControlKeyItem(Settings settings) {
+    public ControlKeyItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if(user.getVehicle() instanceof BlockShipEntity && !world.isClient)
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        if(user.getVehicle() instanceof BlockShipEntity && !world.isClientSide)
         {
-            NbtCompound tag =((BlockShipEntity) user.getVehicle()).getEquippedStack(EquipmentSlot.CHEST).getNbt();
+            CompoundTag tag =((BlockShipEntity) user.getVehicle()).getItemBySlot(EquipmentSlot.CHEST).getTag();
             if(tag.getInt("type")==1)
             {
-                user.getVehicle().setVelocity(user.getRotationVector().x,user.getRotationVector().y,user.getRotationVector().z);
-                if(((NbtList)tag.get("addons")).contains(NbtString.of("altitude")))
+                user.getVehicle().setDeltaMovement(user.getLookAngle().x,user.getLookAngle().y,user.getLookAngle().z);
+                if(((ListTag)tag.get("addons")).contains(StringTag.valueOf("altitude")))
                 {
                     user.getVehicle().setNoGravity(false);
-                    ((BlockShipEntity) user.getVehicle()).addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 9999, 2, true, false));
+                    ((BlockShipEntity) user.getVehicle()).addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 9999, 2, true, false));
                 }
 
             }

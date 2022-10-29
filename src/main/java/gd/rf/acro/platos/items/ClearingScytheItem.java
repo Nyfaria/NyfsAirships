@@ -1,33 +1,33 @@
 package gd.rf.acro.platos.items;
 
 import gd.rf.acro.platos.PlatosTransporters;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 public class ClearingScytheItem extends Item {
-    public ClearingScytheItem(Settings settings) {
+    public ClearingScytheItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        for (int i = user.getBlockPos().getX()-10; i < user.getBlockPos().getX()+10; i++) {
-            for (int j = user.getBlockPos().getY()-3; j < user.getBlockPos().getY()+3; j++) {
-                for (int k = user.getBlockPos().getZ()-10; k < user.getBlockPos().getZ()+10; k++) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        for (int i = user.blockPosition().getX()-10; i < user.blockPosition().getX()+10; i++) {
+            for (int j = user.blockPosition().getY()-3; j < user.blockPosition().getY()+3; j++) {
+                for (int k = user.blockPosition().getZ()-10; k < user.blockPosition().getZ()+10; k++) {
                     if(PlatosTransporters.SCYTHEABLE.contains(world.getBlockState(new BlockPos(i,j,k)).getBlock()))
                     {
-                        world.breakBlock(new BlockPos(i,j,k),true,user);
-                        user.getStackInHand(hand).damage(1,user,(dobreak)-> dobreak.sendToolBreakStatus(hand));
+                        world.destroyBlock(new BlockPos(i,j,k),true,user);
+                        user.getItemInHand(hand).hurtAndBreak(1,user,(dobreak)-> dobreak.broadcastBreakEvent(hand));
                     }
                 }
             }
@@ -36,8 +36,8 @@ public class ClearingScytheItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("scythe.platos.tooltip"));
+    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
+        super.appendHoverText(stack, world, tooltip, context);
+        tooltip.add(new TranslatableComponent("scythe.platos.tooltip"));
     }
 }

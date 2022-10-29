@@ -1,49 +1,49 @@
 package gd.rf.acro.platos.entity;
 
+import com.mojang.math.Vector3f;
 import gd.rf.acro.platos.ConfigUtils;
 import gd.rf.acro.platos.PlatosTransporters;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
 
-public class BlockShipEntity extends PigEntity {
-    public BlockShipEntity(EntityType<? extends PigEntity> entityType, World world) {
+public class BlockShipEntity extends Pig {
+    public BlockShipEntity(EntityType<? extends Pig> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public boolean canWalkOnFluid(Fluid fluid) {
-        if(this.getEquippedStack(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
+    public boolean canStandOnFluid(Fluid fluid) {
+        if(this.getItemBySlot(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
         {
-            if(this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getInt("type")==0)
+            if(this.getItemBySlot(EquipmentSlot.CHEST).getTag().getInt("type")==0)
             {
                 return FluidTags.WATER.contains(fluid);
             }
@@ -53,22 +53,22 @@ public class BlockShipEntity extends PigEntity {
 
 
     @Override
-    public float getSaddledSpeed() {
+    public float getSpeed() {
 
         float cspeed = Float.parseFloat(ConfigUtils.config.getOrDefault("cspeed","0.2"));
         float nspeed = Float.parseFloat(ConfigUtils.config.getOrDefault("nspeed","0.05"));
-        if(this.getPrimaryPassenger() instanceof  PlayerEntity)
+        if(this.getControllingPassenger() instanceof  Player)
         {
-            if(((PlayerEntity) this.getPrimaryPassenger()).getMainHandStack().getItem()== PlatosTransporters.CONTROL_KEY_ITEM)
+            if(((Player) this.getControllingPassenger()).getMainHandItem().getItem()== PlatosTransporters.CONTROL_KEY_ITEM)
             {
-                if(this.getEquippedStack(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
+                if(this.getItemBySlot(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
                 {
-                    if(this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getInt("type")==0)
+                    if(this.getItemBySlot(EquipmentSlot.CHEST).getTag().getInt("type")==0)
                     {
-                        if(this.world.getBlockState(this.getBlockPos().down()).getBlock()== Blocks.WATER)
+                        if(this.level.getBlockState(this.blockPosition().below()).getBlock()== Blocks.WATER)
                         {
-                            NbtList go = (NbtList) this.getEquippedStack(EquipmentSlot.CHEST).getNbt().get("addons");
-                            if(go.contains(NbtString.of("engine")))
+                            ListTag go = (ListTag) this.getItemBySlot(EquipmentSlot.CHEST).getTag().get("addons");
+                            if(go.contains(StringTag.valueOf("engine")))
                             {
                                 return cspeed*1.5f;
                             }
@@ -76,14 +76,14 @@ public class BlockShipEntity extends PigEntity {
                         }
                         return nspeed;
                     }
-                    if(this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getInt("type")==1)
+                    if(this.getItemBySlot(EquipmentSlot.CHEST).getTag().getInt("type")==1)
                     {
                         return 0f;
                     }
                     else
                     {
-                        NbtList go = (NbtList) this.getEquippedStack(EquipmentSlot.CHEST).getNbt().get("addons");
-                        if(go.contains(NbtString.of("engine")))
+                        ListTag go = (ListTag) this.getItemBySlot(EquipmentSlot.CHEST).getTag().get("addons");
+                        if(go.contains(StringTag.valueOf("engine")))
                         {
                             return cspeed*1.5f;
                         }
@@ -96,52 +96,52 @@ public class BlockShipEntity extends PigEntity {
     }
 
     @Override
-    protected void initGoals() { }
+    protected void registerGoals() { }
 
     @Override
-    public boolean canBeRiddenInWater() {
+    public boolean rideableUnderWater() {
         return true;
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+        return SoundEvents.BOAT_PADDLE_WATER;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+        return SoundEvents.BOAT_PADDLE_WATER;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+        return SoundEvents.BOAT_PADDLE_WATER;
     }
 
     @Override
-    protected SoundEvent getFallSound(int distance) {
-        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+    protected SoundEvent getFallDamageSound(int distance) {
+        return SoundEvents.BOAT_PADDLE_WATER;
     }
 
     @Override
-    protected SoundEvent getSplashSound() {
-        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+    protected SoundEvent getSwimSplashSound() {
+        return SoundEvents.BOAT_PADDLE_WATER;
     }
 
     @Override
     protected SoundEvent getSwimSound() {
-        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+        return SoundEvents.BOAT_PADDLE_WATER;
     }
 
     @Override
-    protected int computeFallDamage(float fallDistance, float damageMultiplier) {
+    protected int calculateFallDamage(float fallDistance, float damageMultiplier) {
         return 0;
     }
 
-    public void setModel(NbtList input, int direction, int offset, int type, NbtCompound storage,NbtList addons)
+    public void setModel(ListTag input, int direction, int offset, int type, CompoundTag storage,ListTag addons)
     {
         ItemStack itemStack = new ItemStack(Items.OAK_PLANKS);
-        NbtCompound tag = new NbtCompound();
+        CompoundTag tag = new CompoundTag();
         tag.putString("model", UUID.randomUUID().toString());
         tag.put("parts",input);
         tag.putInt("direction",direction);
@@ -149,57 +149,57 @@ public class BlockShipEntity extends PigEntity {
         tag.putInt("type",type);
         tag.put("storage",storage);
         tag.put("addons",addons);
-        itemStack.setNbt(tag);
-        this.equipStack(EquipmentSlot.CHEST,itemStack);
+        itemStack.setTag(tag);
+        this.setItemSlot(EquipmentSlot.CHEST,itemStack);
     }
 
 
 
     @Override
-    public int getSafeFallDistance() {
+    public int getMaxFallDistance() {
         return 400;
     }
 
     public void tryDisassemble()
     {
-        if(this.getEquippedStack(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
+        if(this.getItemBySlot(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
         {
-            NbtList list = (NbtList) this.getEquippedStack(EquipmentSlot.CHEST).getNbt().get("parts");
-            int offset = this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getInt("offset");
-            NbtCompound storage = this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getCompound("storage");
-            for (NbtElement tag : list)
+            ListTag list = (ListTag) this.getItemBySlot(EquipmentSlot.CHEST).getTag().get("parts");
+            int offset = this.getItemBySlot(EquipmentSlot.CHEST).getTag().getInt("offset");
+            CompoundTag storage = this.getItemBySlot(EquipmentSlot.CHEST).getTag().getCompound("storage");
+            for (Tag tag : list)
             {
-                String[] split = tag.asString().split(" ");
-                BlockState state =world.getBlockState(this.getBlockPos().add(Integer.parseInt(split[1]), Integer.parseInt(split[2]) + offset, Integer.parseInt(split[3])));
-                if (!state.isAir() && !state.isOf(Blocks.WATER)) {
-                    if (this.getPrimaryPassenger() instanceof PlayerEntity) {
-                        ((PlayerEntity) this.getPrimaryPassenger()).sendMessage(new LiteralText("cannot disassemble, not enough space"), false);
+                String[] split = tag.getAsString().split(" ");
+                BlockState state =level.getBlockState(this.blockPosition().offset(Integer.parseInt(split[1]), Integer.parseInt(split[2]) + offset, Integer.parseInt(split[3])));
+                if (!state.isAir() && !state.is(Blocks.WATER)) {
+                    if (this.getControllingPassenger() instanceof Player) {
+                        ((Player) this.getControllingPassenger()).displayClientMessage(new TextComponent("cannot disassemble, not enough space"), false);
                     }
                     return;
                 }
             }
             list.forEach(block->
             {
-                String[] split = block.asString().split(" ");
-                world.setBlockState(this.getBlockPos().add(Integer.parseInt(split[1]),Integer.parseInt(split[2])+offset,Integer.parseInt(split[3])), Block.getStateFromRawId(Integer.parseInt(split[0])));
+                String[] split = block.getAsString().split(" ");
+                level.setBlockAndUpdate(this.blockPosition().offset(Integer.parseInt(split[1]),Integer.parseInt(split[2])+offset,Integer.parseInt(split[3])), Block.stateById(Integer.parseInt(split[0])));
             });
-            storage.getKeys().forEach(blockEntity->
+            storage.getAllKeys().forEach(blockEntity->
             {
                 String[] split = blockEntity.split(" ");
-                BlockPos newpos = this.getBlockPos().add(Integer.parseInt(split[0]),Integer.parseInt(split[1])+offset,Integer.parseInt(split[2]));
-                BlockEntity entity = world.getBlockEntity(newpos);
-                NbtCompound data = storage.getCompound(blockEntity);
+                BlockPos newpos = this.blockPosition().offset(Integer.parseInt(split[0]),Integer.parseInt(split[1])+offset,Integer.parseInt(split[2]));
+                BlockEntity entity = level.getBlockEntity(newpos);
+                CompoundTag data = storage.getCompound(blockEntity);
                 if(data!=null)
                 {
                     data.putInt("x", newpos.getX());
                     data.putInt("y", newpos.getY());
                     data.putInt("z", newpos.getZ());
-                    entity.readNbt(data);
-                    entity.markDirty();
+                    entity.load(data);
+                    entity.setChanged();
                 }
             });
-            this.removeAllPassengers();
-            this.teleport(0,-1000,0);
+            this.ejectPassengers();
+            this.teleportToWithTicket(0,-1000,0);
             this.dead=true;
             this.remove(RemovalReason.DISCARDED);
         }
@@ -207,8 +207,8 @@ public class BlockShipEntity extends PigEntity {
 
     private Integer[] shouldRotateStructure(int i, int j, int k)
     {
-        if(!world.isClient){
-            int direction = this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getInt("direction");
+        if(!level.isClientSide){
+            int direction = this.getItemBySlot(EquipmentSlot.CHEST).getTag().getInt("direction");
             int curDir = getClosestAxis();
             if(direction==curDir)
             {
@@ -227,15 +227,15 @@ public class BlockShipEntity extends PigEntity {
     }
     private int getClosestAxis()
     {
-        if(this.getYaw()>135 && this.getYaw()<225)
+        if(this.getYRot()>135 && this.getYRot()<225)
         {
             return 180;
         }
-        if(this.getYaw()>225 && this.getYaw()<315)
+        if(this.getYRot()>225 && this.getYRot()<315)
         {
             return 270;
         }
-        if(this.getYaw()>45 && this.getYaw()<135)
+        if(this.getYRot()>45 && this.getYRot()<135)
         {
             return 90;
         }
@@ -243,13 +243,13 @@ public class BlockShipEntity extends PigEntity {
     }
 
     @Override
-    public boolean cannotDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
     @Override
-    protected boolean movesIndependently() {
-        if(this.getEquippedStack(EquipmentSlot.HEAD).getItem()==Items.STICK)
+    protected boolean shouldPassengersInheritMalus() {
+        if(this.getItemBySlot(EquipmentSlot.HEAD).getItem()==Items.STICK)
         {
             return true;
         }
@@ -257,8 +257,8 @@ public class BlockShipEntity extends PigEntity {
     }
 
     @Override
-    public boolean canMoveVoluntarily() {
-        if(this.getEquippedStack(EquipmentSlot.HEAD).getItem()==Items.STICK)
+    public boolean isEffectiveAi() {
+        if(this.getItemBySlot(EquipmentSlot.HEAD).getItem()==Items.STICK)
         {
             return true;
         }
@@ -272,7 +272,7 @@ public class BlockShipEntity extends PigEntity {
 
     @Override
     public boolean canBeControlledByRider() {
-        if(this.getEquippedStack(EquipmentSlot.HEAD).getItem()==Items.STICK)
+        if(this.getItemBySlot(EquipmentSlot.HEAD).getItem()==Items.STICK)
         {
             return false;
         }
@@ -280,18 +280,18 @@ public class BlockShipEntity extends PigEntity {
     }
 
     @Override
-    public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-        if(!player.getEntityWorld().isClient && player.getStackInHand(hand)==ItemStack.EMPTY && hand==Hand.MAIN_HAND)
+    public InteractionResult interactAt(Player player, Vec3 hitPos, InteractionHand hand) {
+        if(!player.getCommandSenderWorld().isClientSide && player.getItemInHand(hand)==ItemStack.EMPTY && hand==InteractionHand.MAIN_HAND)
         {
             player.startRiding(this,true);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        if(!player.getEntityWorld().isClient && player.getStackInHand(hand).getItem()==PlatosTransporters.LIFT_JACK_ITEM && hand==Hand.MAIN_HAND)
+        if(!player.getCommandSenderWorld().isClientSide && player.getItemInHand(hand).getItem()==PlatosTransporters.LIFT_JACK_ITEM && hand==InteractionHand.MAIN_HAND)
         {
-            this.getEquippedStack(EquipmentSlot.CHEST).getNbt().putInt("offset",player.getStackInHand(hand).getNbt().getInt("off"));
-            return ActionResult.SUCCESS;
+            this.getItemBySlot(EquipmentSlot.CHEST).getTag().putInt("offset",player.getItemInHand(hand).getTag().getInt("off"));
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -311,44 +311,44 @@ public class BlockShipEntity extends PigEntity {
 
 
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+    public boolean causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
     @Override
-    public void updatePassengerPosition(Entity passenger) {
+    public void positionRider(Entity passenger) {
         int extra = 0;
         passenger.fallDistance=0;
-        if(this.getEquippedStack(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
+        if(this.getItemBySlot(EquipmentSlot.CHEST).getItem()==Items.OAK_PLANKS)
         {
-            extra = this.getEquippedStack(EquipmentSlot.CHEST).getNbt().getInt("offset")-1;
+            extra = this.getItemBySlot(EquipmentSlot.CHEST).getTag().getInt("offset")-1;
         }
-        if(this.getPrimaryPassenger() instanceof PlayerEntity)
+        if(this.getControllingPassenger() instanceof Player)
         {
-            if(passenger==this.getPrimaryPassenger())
+            if(passenger==this.getControllingPassenger())
             {
-                passenger.updatePosition(this.getX(),this.getY()+0.5+extra,this.getZ());
+                passenger.absMoveTo(this.getX(),this.getY()+0.5+extra,this.getZ());
             }
             else
             {
-                Vec3f dir = this.getMovementDirection().getOpposite().getUnitVector();
-                int vv = this.getPassengerList().indexOf(passenger);
-                passenger.updatePosition(this.getPrimaryPassenger().getX()+dir.getX()*vv, this.getPrimaryPassenger().getY()+dir.getY()*vv, this.getPrimaryPassenger().getZ()+dir.getZ()*vv);
+                Vector3f dir = this.getMotionDirection().getOpposite().step();
+                int vv = this.getPassengers().indexOf(passenger);
+                passenger.absMoveTo(this.getControllingPassenger().getX()+dir.x()*vv, this.getControllingPassenger().getY()+dir.y()*vv, this.getControllingPassenger().getZ()+dir.z()*vv);
             }
         }
     }
 
     @Override
-    public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
+    public void thunderHit(ServerLevel world, LightningBolt lightning) {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return true;
     }
 
     @Override
-    public boolean collidesWith(Entity other) {
+    public boolean canCollideWith(Entity other) {
         return true;
     }
 }
