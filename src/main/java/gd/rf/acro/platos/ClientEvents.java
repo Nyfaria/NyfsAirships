@@ -3,7 +3,6 @@ package gd.rf.acro.platos;
 import gd.rf.acro.platos.network.MoveMessage;
 import gd.rf.acro.platos.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,31 +16,31 @@ public class ClientEvents {
 
 
 
-        while (PlatosTransporters.SHIP_UP.isPressed())
+        while (PlatosTransporters.SHIP_UP.consumeClick())
         {
 
             NetworkHandler.INSTANCE.sendToServer(new MoveMessage(3));
         }
-        while (PlatosTransporters.SHIP_DOWN.isPressed())
+        while (PlatosTransporters.SHIP_DOWN.consumeClick())
         {
             NetworkHandler.INSTANCE.sendToServer(new MoveMessage(4));
         }
-        while (PlatosTransporters.SHIP_STOP.isPressed())
+        while (PlatosTransporters.SHIP_STOP.consumeClick())
         {
             NetworkHandler.INSTANCE.sendToServer(new MoveMessage(5));
         }
 
 
 
-        while (Minecraft.getInstance().gameSettings.keyBindForward.isPressed())
+        while (Minecraft.getInstance().options.keyUp.consumeClick())
         {
             NetworkHandler.INSTANCE.sendToServer(new MoveMessage(0));
         }
-        while (Minecraft.getInstance().gameSettings.keyBindLeft.isPressed())
+        while (Minecraft.getInstance().options.keyLeft.consumeClick())
         {
             NetworkHandler.INSTANCE.sendToServer(new MoveMessage(1));
         }
-        while (Minecraft.getInstance().gameSettings.keyBindRight.isPressed())
+        while (Minecraft.getInstance().options.keyRight.consumeClick())
         {
             NetworkHandler.INSTANCE.sendToServer(new MoveMessage(2));
 

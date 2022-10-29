@@ -1,19 +1,12 @@
 package gd.rf.acro.platos;
 
 import gd.rf.acro.platos.entity.BlockShipEntity;
-import gd.rf.acro.platos.network.MoveMessage;
-import gd.rf.acro.platos.network.NetworkHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.event.InputEvent;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,9 +17,13 @@ public class Events {
     public static void registerBoat(RegistryEvent.Register<EntityType<?>> entityTypeRegister)
     {
         entityTypeRegister.getRegistry().register(PlatosTransporters.BLOCK_SHIP_ENTITY_ENTITY_TYPE);
-        GlobalEntityTypeAttributes.put(PlatosTransporters.BLOCK_SHIP_ENTITY_ENTITY_TYPE, BlockShipEntity.getAttributes().create());
-        EntitySpawnPlacementRegistry.register(PlatosTransporters.BLOCK_SHIP_ENTITY_ENTITY_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, BlockShipEntity::canAnimalSpawn);
+//        DefaultAttributes.put(PlatosTransporters.BLOCK_SHIP_ENTITY_ENTITY_TYPE, BlockShipEntity.createAttributes().build());
+        SpawnPlacements.register(PlatosTransporters.BLOCK_SHIP_ENTITY_ENTITY_TYPE, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockShipEntity::checkAnimalSpawnRules);
         System.out.println("ship attributes registered!");
+    }
+    @SubscribeEvent
+    public static void onAttributes(EntityAttributeCreationEvent event){
+        event.put(PlatosTransporters.BLOCK_SHIP_ENTITY_ENTITY_TYPE, BlockShipEntity.createAttributes().build());
     }
 
 

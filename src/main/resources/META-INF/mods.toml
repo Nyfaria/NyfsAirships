@@ -46,6 +46,6 @@ A mod about block vehicles and making them move
 [[dependencies.platos]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16,1.16.3]"
+    versionRange="[1.17,1.18]"
     ordering="NONE"
     side="BOTH"

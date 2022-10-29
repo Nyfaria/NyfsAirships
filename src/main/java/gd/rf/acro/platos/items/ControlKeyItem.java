@@ -2,20 +2,20 @@ package gd.rf.acro.platos.items;
 
 import gd.rf.acro.platos.PlatosTransporters;
 import gd.rf.acro.platos.entity.BlockShipEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ControlKeyItem extends Item {
 
@@ -28,26 +28,26 @@ public class ControlKeyItem extends Item {
 
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World p_77659_1_, PlayerEntity user, Hand p_77659_3_) {
-        if(user.getRidingEntity() instanceof BlockShipEntity)
+    public InteractionResultHolder<ItemStack> use(Level p_77659_1_, Player user, InteractionHand p_77659_3_) {
+        if(user.getVehicle() instanceof BlockShipEntity)
         {
-            CompoundNBT tag =((BlockShipEntity) user.getRidingEntity()).getItemStackFromSlot(EquipmentSlotType.CHEST).getTag();
-            user.getRidingEntity().setMotion(user.getLookVec().x, user.getLookVec().y, user.getLookVec().z);
+            CompoundTag tag =((BlockShipEntity) user.getVehicle()).getItemBySlot(EquipmentSlot.CHEST).getTag();
+            user.getVehicle().setDeltaMovement(user.getLookAngle().x, user.getLookAngle().y, user.getLookAngle().z);
             if(tag.getInt("type")==1)
             {
-                if(((ListNBT)tag.get("addons")).contains(StringNBT.valueOf("altitude")))
+                if(((ListTag)tag.get("addons")).contains(StringTag.valueOf("altitude")))
                 {
-                    user.getRidingEntity().setNoGravity(false);
-                    ((BlockShipEntity) user.getRidingEntity()).addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, 9999, 2, true, false));
+                    user.getVehicle().setNoGravity(false);
+                    ((BlockShipEntity) user.getVehicle()).addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 9999, 2, true, false));
 
                 }
 
             }
         }
-        if(p_77659_1_.isRemote)
+        if(p_77659_1_.isClientSide)
         {
             PlatosTransporters.givePlayerStartBook(user);
         }
-        return super.onItemRightClick(p_77659_1_, user, p_77659_3_);
+        return super.use(p_77659_1_, user, p_77659_3_);
     }
 }

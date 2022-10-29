@@ -1,21 +1,21 @@
 package gd.rf.acro.platos.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.Block;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import com.mojang.math.Vector3f;
 
 import java.util.HashMap;
 
 public class BlockShipEntityModel extends EntityModel<BlockShipEntity> {
-    private HashMap<String, ListNBT> entities;
+    private HashMap<String, ListTag> entities;
     private String ship;
     private int direction;
     private float xOffset;
@@ -58,16 +58,16 @@ public class BlockShipEntityModel extends EntityModel<BlockShipEntity> {
 
 
     @Override
-    public void setRotationAngles(BlockShipEntity entity, float v, float v1, float v2, float v3, float v4) {
+    public void setupAnim(BlockShipEntity entity, float v, float v1, float v2, float v3, float v4) {
         if(this.entities==null)
         {
             this.entities=new HashMap<>();
         }
-        if(entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem()== Items.OAK_PLANKS)
+        if(entity.getItemBySlot(EquipmentSlot.CHEST).getItem()== Items.OAK_PLANKS)
         {
-            CompoundNBT tag = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getTag();
+            CompoundTag tag = entity.getItemBySlot(EquipmentSlot.CHEST).getTag();
             this.ship=tag.getString("model");
-            this.entities.put(this.ship,(ListNBT) tag.get("parts"));
+            this.entities.put(this.ship,(ListTag) tag.get("parts"));
             this.direction=tag.getInt("direction");
             this.xOffset=getxOffset();
             this.zOffset=getzOffset();
@@ -76,23 +76,23 @@ public class BlockShipEntityModel extends EntityModel<BlockShipEntity> {
     }
 
     @Override
-    public void render(MatrixStack matrices, IVertexBuilder iVertexBuilder, int light, int overlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrices, VertexConsumer iVertexBuilder, int light, int overlay, float red, float green, float blue, float alpha) {
         if(this.ship!=null)
         {
-            IRenderTypeBuffer buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-            matrices.push();
+            MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+            matrices.pushPose();
             matrices.scale(-1.0F, -1.0F, 1.0F);
-            matrices.rotate(Vector3f.YN.rotationDegrees(this.direction));
+            matrices.mulPose(Vector3f.YN.rotationDegrees(this.direction));
             entities.get(this.ship).forEach(line->
             {
-                String[] compound = line.getString().split(" ");
+                String[] compound = line.getAsString().split(" ");
                 //Block block = Registry.BLOCK.get(new Identifier(compound[0]));
-                matrices.push();
+                matrices.pushPose();
                 matrices.translate(Double.parseDouble(compound[1])+this.xOffset,Double.parseDouble(compound[2])+this.yOffset-1.5,Double.parseDouble(compound[3])+this.zOffset);
-                Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(Block.getStateById(Integer.parseInt(compound[0])),matrices,buffer,light,overlay);
-                matrices.pop();
+                Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Block.stateById(Integer.parseInt(compound[0])),matrices,buffer,light,overlay);
+                matrices.popPose();
             });
-            matrices.pop();
+            matrices.popPose();
         }
     }
 }
