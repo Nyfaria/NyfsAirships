@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:planks",
+    "#minecraft:wooden_stairs",
+    "#minecraft:wooden_slabs",
+    "#minecraft:wooden_fences",
+    "#minecraft:wooden_trapdoors",
+    "#minecraft:wool",
+    "nyfsairships:ship_controller",
+    "nyfsairships:balloon_block",
+    "#minecraft:logs",
+    "#minecraft:buttons",
+    "#minecraft:carpets",
+    "minecraft:glass"
+  ]
+}

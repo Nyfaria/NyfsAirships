@@ -1,0 +1,13 @@
+{
+  "item.nyfsairships.control_key": "مفتاح التحكم",
+  "item.nyfsairships.wrench": "مفتاح الصواميل",
+  "item.nyfsairships.lift_jack": "سكين الرفع",
+  "item.nyfsairships.clearing_scythe": "محش",
+
+  "block.nyfsairships.ship_controller": "جهاز التحكم",
+  "block.nyfsairships.wheel_block": "عجلة",
+  "block.nyfsairships.float_block": "عوامة",
+  "block.nyfsairships.balloon_block": "منطاد",
+
+  "itemGroup.nyfsairships.tab": "مواصلات أفلاطون"
+}

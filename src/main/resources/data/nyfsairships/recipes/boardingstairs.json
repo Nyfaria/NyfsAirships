@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "nyfsairships",
+  "pattern": [
+    "SWW",
+    "SSW",
+    "SSS"
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "S": {
+      "tag": "minecraft:stairs"
+    }
+  },
+  "result": {
+    "item": "nyfsairships:boarding_stairs",
+    "count": 1
+  }
+}

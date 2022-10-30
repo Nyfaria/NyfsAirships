@@ -1,0 +1,34 @@
+{
+  "item.nyfsairships.control_key": "Clave de Control",
+  "item.nyfsairships.wrench": "Herramienta de Desmontaje",
+  "item.nyfsairships.lift_jack": "Gato de Elevación",
+  "item.nyfsairships.clearing_scythe": "Guadaña",
+  "item.nyfsairships.boarding_stairs": "Escaleras de Embarque",
+
+  "block.nyfsairships.ship_controller": "Asamblea Control de Vehículo",
+  "block.nyfsairships.wheel_block": "Rueda",
+  "block.nyfsairships.float_block": "Flotador",
+  "block.nyfsairships.balloon_block": "Globo de Dirigible",
+
+  "scythe.nyfsairships.tooltip": "¡Usa esta ítem para cortar la hierba!",
+  "liftjack.nyfsairships.tooltip": "El jugador estará sentado en el bloque",
+  "liftjack.nyfsairships.tooltip2": "encima del nivel del mar/la tierra.",
+  "boardingstairs.nyfsairships.tooltip": "¡Punta a un vehículo distante y haz clic para montar!",
+
+  "itemGroup.nyfsairships.tab": "Transportadores de Plato",
+
+  "category.nyfsairships.main": "Transportadores de Plato",
+
+  "key.nyfsairships.up": "Dirigible hacia arriba",
+  "key.nyfsairships.down": "Dirigible hacia abajo",
+  "key.nyfsairships.stop": "Mantener/desmaneter la posición del vehículo",
+
+  "book.nyfsairships.page1": "Bienvenidas a Transportadores de Plato, este mod es un actualización anticipada así que puede contener §lbugs. Traducido al español por kapparill (https://youtube.com/kapparill)",
+  "book.nyfsairships.page2": "§lA empezar§r \n\nPara empezar, primera necesitas crear una §oAsamblea Control de Vehículo§r y un §oClave de Control§r. Puedes crear un §oGato de Elevación§r, también. Para crear un vehículo, necesita el monto correcto de flotadores, globos, o ruedas para su tereno deseado.",
+  "book.nyfsairships.page3": "1 Flotador = 20 bloques \n\n1 Rueda = 10 bloques \n\n1 Globo de Dirigible = 2 bloques \n\n(todos son configurables) armar tu vehículo con materiales correctos de vehículo y luego pones la controlador.",
+  "book.nyfsairships.page4": "El controlador te dirá si hay errores, o va a armar tu vehículo. Por defecto, el bloque en el que el jugador se sienta estará uno bloque hacia arriba del tierra. Para cambiar eso, usa el Gato de Elevación.",
+  "book.nyfsairships.page5": "El Gato de Elevación puede levantar y bajar donde sienta el jugador cuando se hace clic. Para cambiar la altura, haz clic en la Asamblea Control de Vehículo con el Gato de Elevación en la mano.",
+  "book.nyfsairships.page6": "Cuando se crea el vehículo, hay unos controles. Hacer los tipos mar y tierra avanzar, necesitas tener la Clave de Control en la mano, pero si estás usando un dirigible, el vehículo avanzará en tangente del jugador.",
+  "book.nyfsairships.page7": "Para hace un desmontaje del vehículo, debes sentarte en él y luego usar la Herramienta de Desmontaje, si hay espacio."
+
+}

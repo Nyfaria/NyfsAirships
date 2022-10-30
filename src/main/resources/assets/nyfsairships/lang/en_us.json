@@ -1,0 +1,32 @@
+{
+  "item.nyfsairships.control_key": "Control Key",
+  "item.nyfsairships.wrench": "Disassembly Wrench",
+  "item.nyfsairships.lift_jack": "Ship Lift Jack",
+  "item.nyfsairships.clearing_scythe": "Clearing Scythe",
+  "item.nyfsairships.boarding_stairs": "Boarding Stairs",
+
+  "block.nyfsairships.ship_controller": "Ship Controller Assembly",
+  "block.nyfsairships.balloon_block": "Airship Balloon",
+
+  "scythe.nyfsairships.tooltip": "use this item to clear away grass!",
+  "liftjack.nyfsairships.tooltip":"The player will be sitting on the block",
+  "liftjack.nyfsairships.tooltip2": "above ground/water level",
+  "boardingstairs.nyfsairships.tooltip": "Point at a distant Airship and interact to get on!",
+
+  "itemGroup.nyfsairships.tab": "Plato's Transporters",
+
+  "category.nyfsairships.main": "Plato's Transporters",
+
+  "key.nyfsairships.up": "Fly airship up",
+  "key.nyfsairships.down": "Fly airship down",
+  "key.nyfsairships.stop": "Freeze/Unfreeze airship direction",
+
+  "book.nyfsairships.page1": "Welcome to Nyf's Airships, this mod is in early release so there could be §lbugs",
+  "book.nyfsairships.page2": "§lGetting Started§r \n\nTo get started you first need to craft a §oShip Controller§r and a §oControl Key§r you may also want to craft a §oShip Lift Jack§r. To create a vehicle, it requires the correct amount of balloons",
+  "book.nyfsairships.page3": "1 airship Balloon = 2 blocks \n\n(this is configurable) assembly your ship out of valid materials and then place the controller",
+  "book.nyfsairships.page4": "The controller will tell you if there is any mistakes or it will create your vehicle. By default the block the player sits on (in front of the controller) will be 1 block above the ground, to change this, use the lift jack",
+  "book.nyfsairships.page5": "the lift jack can raise and lower where the player sits by using or shift-using it (on a block) respectively, to change the height (listed on the jack's tooltip) you can interact with the controller block with the jack in your main hand",
+  "book.nyfsairships.page6": "Once the vehicle is created there is a few controls, to make the water and land variants go forward, one must simply hold the control key, whereas the airship will travel in the direction the player is looking when the key is being used",
+  "book.nyfsairships.page7": "To disassemble the vehicle you must sit on it and then use the Disassembly wrench, it will turn back into blocks IN THE DIRECTION IT WAS BUILT IN if there is space"
+
+}
