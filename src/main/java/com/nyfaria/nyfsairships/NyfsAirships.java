@@ -63,7 +63,6 @@ public class NyfsAirships implements ModInitializer {
 		registerBlocks();
 		registerItems();
 		ConfigUtils.checkConfigs();
-		System.out.println("Hello Fabric world!");
 
 
 		ServerPlayNetworking.registerGlobalReceiver(forwardPacket,(server,handler,packetContext, attachedData,sender) ->

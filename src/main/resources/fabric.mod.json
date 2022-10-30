@@ -29,7 +29,7 @@
   "mixins": [
     "nyfsairships.mixins.json"
   ],
-
+  "accessWidener" : "nyfsairships.accesswidener",
   "depends": {
     "fabricloader": ">=0.11.0",
     "fabric": "*",
