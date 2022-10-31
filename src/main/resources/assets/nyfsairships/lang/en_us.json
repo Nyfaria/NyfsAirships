@@ -5,6 +5,8 @@
   "item.nyfsairships.clearing_scythe": "Clearing Scythe",
   "item.nyfsairships.boarding_stairs": "Boarding Stairs",
 
+  "entity.nyfsairships.block_ship": "Airship",
+
   "block.nyfsairships.ship_controller": "Ship Controller Assembly",
   "block.nyfsairships.balloon_block": "Airship Balloon",
 
